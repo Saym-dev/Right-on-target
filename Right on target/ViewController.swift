@@ -16,23 +16,25 @@ class ViewController: UIViewController {
     
     //MARK: - Жизненный цикл
     
-    override func loadView() {
-        super.loadView()
-        game = Game(startValue: 1, endValue: 50, rounds: 5)
-        updateLabelWithSecretNumber(newText: String(game.currentSecretValue))
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let generator = Generator(startValue: 1, endValue: 50)!
+        game = Game(valueGenerator: generator, rounds: 5)
+        
+        updateLabelWithSecretNumber(newText: String(game.currentRound.currentSecretValue))
     }
     
     // MARK: - Взаимодействие View - Model
     
     @IBAction func checkNumber() {
-        game.calculateScore(with: Int(slider.value))
-        if game.IsGameEnded {
+        game.currentRound.calculateScore(with: Int(slider.value))
+        if game.isGameEnded {
             showAlertWith(score: game.score)
             game.restartGame()
         } else {
             game.startNewRound()
         }
-        updateLabelWithSecretNumber(newText: String(game.currentSecretValue))
+        updateLabelWithSecretNumber(newText: String(game.currentRound.currentSecretValue))
     }
     
     //MARK: - Обновление View
